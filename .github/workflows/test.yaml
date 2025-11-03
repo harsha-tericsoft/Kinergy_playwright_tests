@@ -1,0 +1,109 @@
+name: Playwright Tests with S3
+
+on:
+  push:
+    branches: [ main ]   # <--- runs when code pushed into this repo
+  workflow_dispatch:      # manual trigger
+  repository_dispatch:    # allow main repo to trigger
+    types: [run-playwright-tests]
+
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Export env (Test)
+        shell: bash
+        run: |
+          echo "ENV=test" >> $GITHUB_ENV
+          echo "TEST_SUPER_ADMIN_USERNAME=${{ secrets.TEST_SUPER_ADMIN_USERNAME }}" >> $GITHUB_ENV
+          echo "TEST_SUPER_ADMIN_PASSWORD=${{ secrets.TEST_SUPER_ADMIN_PASSWORD }}" >> $GITHUB_ENV
+          echo "TEST_AMF_USERNAME=${{ secrets.TEST_AMF_USERNAME }}" >> $GITHUB_ENV
+          echo "TEST_AMF_PASSWORD=${{ secrets.TEST_AMF_PASSWORD }}" >> $GITHUB_ENV
+          echo "TEST_AMS_USERNAME=${{ secrets.TEST_AMS_USERNAME }}" >> $GITHUB_ENV
+          echo "TEST_AMS_PASSWORD=${{ secrets.TEST_AMS_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Run SuperAdmin projects
+        run: |
+          npx playwright test \
+            --project="e2e login" \
+            --project="e2e super admin" \
+            --project="regression super admin" \
+            --reporter=blob \
+            --output=blob-report
+
+      - name: Merge reports into HTML
+        run: |
+          mkdir -p merged-report
+          npx playwright merge-reports --reporter=html ./blob-report
+          mv playwright-report merged-report/html
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+
+      - name: Upload HTML report to S3 (public bucket)
+        id: s3
+        shell: bash
+        run: |
+          TS=$(date -u +'%Y/%m/%d/%H%M%S')
+          DEST="s3://vitawerks-playwright-reports/${TS}/"
+          echo "📤 Uploading to $DEST"
+          aws s3 cp --recursive merged-report/html "$DEST" --cache-control no-cache
+
+          # Public direct URL (since bucket is public)
+          PUBLIC_URL="https://vitawerks-playwright-reports.s3.us-east-2.amazonaws.com/${TS}/index.html"
+          echo "url=$PUBLIC_URL" >> $GITHUB_OUTPUT
+          echo "ts=$TS" >> $GITHUB_OUTPUT
+
+
+      - name: Show report link
+        run: |
+          echo "✅ Playwright report (7 days link):"
+          echo "${{ steps.s3.outputs.url }}"
+
+
+
+      - name: Notify Teams Channel
+        if: always()
+        run: |
+          REPORT_URL="${{ steps.s3.outputs.url }}"
+          TS="${{ steps.s3.outputs.ts }}"
+
+          PAYLOAD=$(jq -n \
+            --arg summary "✅ Playwright Tests Finished" \
+            --arg text "Report generated at $TS\n\n[Open Report]($REPORT_URL)" \
+            '{
+              "@type": "MessageCard",
+              "@context": "http://schema.org/extensions",
+              "summary": $summary,
+              "sections": [{
+                "activityTitle": $summary,
+                "text": $text
+              }]
+            }')
+
+          curl -H "Content-Type: application/json" \
+              -d "$PAYLOAD" \
+              ${{ secrets.TEAMS_WEBHOOK_URL }}
+
