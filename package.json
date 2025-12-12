@@ -1,5 +1,5 @@
 {
-  "name": "flexos_playwright_tests",
+  "name": "kinergy_playwright_tests",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,46 +9,37 @@
   "scripts": {
     "dev": "cross-env ENV=dev npx playwright test",
     "test": "cross-env ENV=test npx playwright test",
-    "dev:headed": "ENV=dev npx playwright test --headed",
-    "test:headed": "ENV=test npx playwright test --headed",
-    
-    "dev:api": "ENV=dev npx playwright test --project='api tests'",
-    "test:api": "ENV=test npx playwright test --project='api tests'",
-    
-    "dev:e2e": "ENV=dev npx playwright test --project='e2e login' --project='e2e super admin'",
-    "test:e2e": "ENV=test npx playwright test --project='e2e login' --project='e2e super admin'",
-    "dev:e2e:headed": "ENV=dev npx playwright test --project='e2e login' --project='e2e super admin' --headed",
-    "test:e2e:headed": "ENV=test npx playwright test --project='e2e login' --project='e2e super admin' --headed",
-    
-    "dev:regression": "ENV=dev npx playwright test --project='regression super admin'",
-    "test:regression": "ENV=test npx playwright test --project='regression super admin'",
-    "dev:regression:headed": "ENV=dev npx playwright test --project='regression super admin' --headed",
-    "test:regression:headed": "ENV=test npx playwright test --project='regression super admin' --headed",
-    
-    "dev:login": "ENV=dev npx playwright test --project='e2e login'",
-    "test:login": "ENV=test npx playwright test --project='e2e login'",
-    "dev:login:headed": "ENV=dev npx playwright test --project='e2e login' --headed",
-    "test:login:headed": "ENV=test npx playwright test --project='e2e login' --headed",
-    
-    "dev:amf": "ENV=dev npx playwright test --project='e2e AMF' --project='regression AMF'",
-    "test:amf": "ENV=test npx playwright test --project='e2e AMF' --project='regression AMF'",
-    "dev:amf:headed": "ENV=dev npx playwright test --project='e2e AMF' --project='regression AMF' --headed",
-    "test:amf:headed": "ENV=test npx playwright test --project='e2e AMF' --project='regression AMF' --headed",
-    
-    "dev:ams": "ENV=dev npx playwright test --project='e2e AMS' --project='regression AMS'",
-    "test:ams": "ENV=test npx playwright test --project='e2e AMS' --project='regression AMS'",
-    "dev:ams:headed": "ENV=dev npx playwright test --project='e2e AMS' --project='regression AMS' --headed",
-    "test:ams:headed": "ENV=test npx playwright test --project='e2e AMS' --project='regression AMS' --headed",
-    
-    "dev:superadmin": "ENV=dev npx playwright test --project='e2e super admin' --project='regression super admin'",
-    "test:superadmin": "ENV=test npx playwright test --project='e2e super admin' --project='regression super admin'",
-    "dev:superadmin:headed": "ENV=dev npx playwright test --project='e2e super admin' --project='regression super admin' --headed",
-    "test:superadmin:headed": "ENV=test npx playwright test --project='e2e super admin' --project='regression super admin' --headed",
-    
+    "dev:headed": "cross-env ENV=dev npx playwright test --headed",
+    "test:headed": "cross-env ENV=test npx playwright test --headed",
+    "dev:api": "cross-env ENV=dev npx playwright test --project='api tests'",
+    "test:api": "cross-env ENV=test npx playwright test --project='api tests'",
+    "dev:e2e": "cross-env ENV=dev npx playwright test --project='e2e login' --project='e2e super admin'",
+    "test:e2e": "cross-env ENV=test npx playwright test --project='e2e login' --project='e2e super admin'",
+    "dev:e2e:headed": "cross-env ENV=dev npx playwright test --project='e2e login' --project='e2e super admin' --headed",
+    "test:e2e:headed": "cross-env ENV=test npx playwright test --project='e2e login' --project='e2e super admin' --headed",
+    "dev:regression": "cross-env ENV=dev npx playwright test --project='regression super admin'",
+    "test:regression": "cross-env ENV=test npx playwright test --project='regression super admin'",
+    "dev:regression:headed": "cross-env ENV=dev npx playwright test --project='regression super admin' --headed",
+    "test:regression:headed": "cross-env ENV=test npx playwright test --project='regression super admin' --headed",
+    "dev:login": "cross-env ENV=dev npx playwright test --project='e2e login'",
+    "test:login": "cross-env ENV=test npx playwright test --project='e2e login'",
+    "dev:login:headed": "cross-env ENV=dev npx playwright test --project='e2e login' --headed",
+    "test:login:headed": "cross-env ENV=test npx playwright test --project='e2e login' --headed",
+    "dev:amf": "cross-env ENV=dev npx playwright test --project='e2e AMF' --project='regression AMF'",
+    "test:amf": "cross-env ENV=test npx playwright test --project='e2e AMF' --project='regression AMF'",
+    "dev:amf:headed": "cross-env ENV=dev npx playwright test --project='e2e AMF' --project='regression AMF' --headed",
+    "test:amf:headed": "cross-env ENV=test npx playwright test --project='e2e AMF' --project='regression AMF' --headed",
+    "dev:ams": "cross-env ENV=dev npx playwright test --project='e2e AMS' --project='regression AMS'",
+    "test:ams": "cross-env ENV=test npx playwright test --project='e2e AMS' --project='regression AMS'",
+    "dev:ams:headed": "cross-env ENV=dev npx playwright test --project='e2e AMS' --project='regression AMS' --headed",
+    "test:ams:headed": "cross-env ENV=test npx playwright test --project='e2e AMS' --project='regression AMS' --headed",
+    "dev:superadmin": "cross-env ENV=dev npx playwright test --project='e2e super admin' --project='regression super admin'",
+    "test:superadmin": "cross-env ENV=test npx playwright test --project='e2e super admin' --project='regression super admin'",
+    "dev:superadmin:headed": "cross-env ENV=dev npx playwright test --project='e2e super admin' --project='regression super admin' --headed",
+    "test:superadmin:headed": "cross-env ENV=test npx playwright test --project='e2e super admin' --project='regression super admin' --headed",
     "setup": "npx playwright test --project=setup",
-    "setup:dev": "ENV=dev npx playwright test --project=setup",
-    "setup:test": "ENV=test npx playwright test --project=setup",
-    
+    "setup:dev": "cross-env ENV=dev npx playwright test --project=setup",
+    "setup:test": "cross-env ENV=test npx playwright test --project=setup",
     "report": "npx playwright show-report",
     "report:open": "npx playwright show-report --host 0.0.0.0",
     "trace": "npx playwright show-trace",
@@ -56,17 +47,15 @@
     "codegen": "npx playwright codegen",
     "test:list": "npx playwright test --list"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "dotenv": "^17.2.1",
-    "pino": "^9.7.0",
-    "pino-pretty": "^13.0.0",
-    "ts-pattern": "^5.8.0",
-    "@faker-js/faker": "^9.2.0"
-  },
   "devDependencies": {
-    "@playwright/test": "^1.54.1"
+    "@faker-js/faker": "^10.1.0",
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.10.1",
+    "cross-env": "^7.0.3"
+  },
+  "dependencies": {
+    "pino": "^10.1.0",
+    "pino-pretty": "^13.1.2",
+    "ts-pattern": "^5.8.0"
   }
 }

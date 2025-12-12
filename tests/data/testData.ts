@@ -63,4 +63,18 @@ export const testData = {
     ];
     return states[Math.floor(Math.random() * states.length)];
   },
+  clients: {
+    basicDetails: {
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      email: RandomDataGenerator.generateRandomEmail(),
+      phone: RandomDataGenerator.generateRandomPhoneNumber(),
+      companyName: faker.company.name(),
+    },
+    addressDetails: {
+      address: faker.location.streetAddress(),
+      city: faker.location.city(),
+      zipCode: RandomDataGenerator.generateRandomUSZipCode(),
+    },
+  },
 };
